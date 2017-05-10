@@ -14,7 +14,7 @@ cache_file = os.path.join(
 class Source(Base):
     def __init__(self, vim):
         super().__init__(vim)
-        self.name = 'gs'
+        self.name = 'github_stars'
         self.kind = 'file'
 
     def gather_candidates(self, context):
