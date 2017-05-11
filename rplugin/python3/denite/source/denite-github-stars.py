@@ -6,9 +6,11 @@ from wcwidth import wcswidth
 from .base import Base
 
 username = vim.vars['dgs#username'].decode()
-cache_file = os.path.join(
-    os.path.expanduser(os.getenv('XDG_CACHE_HOME', '~/.cache')), 'dgs',
-    'starred_repos')
+cache_dir = os.path.join(
+    os.path.expanduser(os.getenv('XDG_CACHE_HOME', '~/.cache')), 'dgs')
+if not os.path.exists(cache_dir):
+    os.makedirs(cache_dir)
+cache_file = os.path.join(cache_dir, 'starred_repos')
 
 
 class Source(Base):
