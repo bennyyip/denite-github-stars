@@ -7,9 +7,8 @@ from .base import Base
 
 username = vim.vars['dgs#username'].decode()
 cache_dir = os.path.join(
-    os.path.expanduser(os.getenv('XDG_CACHE_HOME', '~/.cache')), 'dgs')
-if not os.path.exists(cache_dir):
-    os.makedirs(cache_dir)
+    os.path.expanduser(os.getenv('XDG_CACHE_HOME', '~/.cache')), 'githubstars')
+cache_dir = os.path.normpath(cache_dir)
 cache_file = os.path.join(cache_dir, 'starred_repos')
 
 
@@ -32,6 +31,8 @@ class Source(Base):
 
 
 def get_repos():
+    if not os.path.exists(cache_dir):
+        os.makedirs(cache_dir)
     if not os.path.exists(cache_file):
         fetch(username)
     return read_cache()
@@ -46,7 +47,7 @@ def abbr(name, desc):
 
 def fetch(username):
     print("fetching starred repos of %s" % username)
-    with open(cache_file, 'w') as f:
+    with open(cache_file, 'wb') as f:
         page = 1
         while True:
             resp = fetch_page(username, page)
@@ -57,9 +58,9 @@ def fetch(username):
                 break
             for repo in starred_repos:
                 f.write(
-                    "%s %s %s\n" %
-                    (repo['full_name'], repo['html_url'], ""
-                     if repo['description'] is None else repo['description']))
+                    ("%s %s %s\n" % (repo['full_name'], repo['html_url'], ""
+                                     if repo['description'] is None else
+                                     repo['description'])).encode('utf-8'))
 
 
 def fetch_page(username, page):
@@ -70,8 +71,8 @@ def fetch_page(username, page):
 
 
 def read_cache():
-    with open(cache_file, 'r') as f:
-        return [parse_line(line) for line in f.readlines()]
+    with open(cache_file, 'rb') as f:
+        return [parse_line(line.decode('utf-8')) for line in f.readlines()]
 
 
 def parse_line(line):
