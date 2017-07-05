@@ -13,7 +13,7 @@ class Source(Base):
         self.username = self.vim.vars['dgs#username']
         cache_dir = os.path.join(
             os.path.expanduser(os.getenv('XDG_CACHE_HOME', '~/.cache')),
-            'githubstars')
+            'github_stars')
         self.cache_dir = os.path.normpath(cache_dir)
         self.cache_file = os.path.join(cache_dir, 'starred_repos')
 
